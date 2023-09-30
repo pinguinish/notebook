@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
-}
+void main() => runZonedGuarded(
+      () => const MainApp(),
+      (error, stack) => AppError(
+        error: error,
+        stackTrace: stack,
+      ),
+    );
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -12,8 +18,29 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: Text('Notebook'),
         ),
+      ),
+    );
+  }
+}
+
+/// [AppError] is displayed when an error has occured during initialization
+class AppError extends StatelessWidget {
+  const AppError({
+    super.key,
+    required this.error,
+    required this.stackTrace,
+  });
+
+  final Object error;
+  final StackTrace stackTrace;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text(error.toString()),
       ),
     );
   }

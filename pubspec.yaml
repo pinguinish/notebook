@@ -10,10 +10,15 @@ dependencies:
   flutter:
     sdk: flutter
 
+  uikit:
+    path: modules/libraries/uikit
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  melos: ^3.1.1
+
 
 flutter:
   uses-material-design: true
