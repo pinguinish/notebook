@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 void main() => runZonedGuarded(
-      () => const MainApp(),
+      () => runApp(const MainApp()),
       (error, stack) => AppError(
         error: error,
         stackTrace: stack,
@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Notebook'),
+          child: Text("Notebook"),
         ),
       ),
     );
@@ -38,9 +38,9 @@ class AppError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: Text(error.toString()),
+        child: Text("Error"),
       ),
     );
   }
