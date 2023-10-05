@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  uikit: 
+    path: modules/libraries/uikit
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 /// class-setting that defines devices' dimensions
 abstract class ScreenDimension {
-  static const (double min, double max) small = (0, 640);
-  static const (double min, double max) medium = (640, 1024);
-  static const (double min, double max) large = (1024, double.infinity);
+  static const double small = 640;
+  static const double medium = 1024;
+  static const double large = double.infinity;
 }
 
 /// class-setting for the text scaling factor of a device type
@@ -14,7 +14,6 @@ abstract class DeviceTextScaleFactor {
   static const double large = 1;
 }
 
-
 /// util-function that make code simpler
 Widget _callDeviceBuilderCheckingNull(
   WidgetBuilder? builder,
@@ -22,28 +21,25 @@ Widget _callDeviceBuilderCheckingNull(
 ) =>
     builder == null ? const SizedBox.shrink() : builder(context);
 
-
-
-
-/// [ScreenUtil] is the main class for adopting widgets and make them responsive
+// /// [ScreenUtil] is the main class for adopting widgets and make them responsive
 class ScreenUtil {
-  static DeviceType deviceTypeOf(Size size) => switch (size) {
-        (Size size) when size.width <= DeviceType.small.size.$2 =>
+  static DeviceType deviceTypeOf(double width) => switch (width) {
+        (double width) when width <= DeviceType.small.screenDimension =>
           DeviceType.small,
-        (Size size) when size.width <= DeviceType.medium.size.$2 =>
+        (double width) when width <= DeviceType.medium.screenDimension =>
           DeviceType.medium,
-        (Size size) when size.width <= DeviceType.large.size.$2 =>
+        (double width) when width <= DeviceType.large.screenDimension =>
           DeviceType.large,
-        _ => throw DeviceTypeException("Undefined device type with $size"),
+        _ =>
+          throw DeviceTypeException("Undefined device type with $width width"),
       };
 }
-
 
 // Base DeviceType class
 @immutable
 sealed class DeviceType {
   final String representation;
-  final (double, double) size;
+  final double screenDimension;
 
   final double textScaleFactor;
 
@@ -53,7 +49,7 @@ sealed class DeviceType {
 
   const DeviceType({
     required this.representation,
-    required this.size,
+    required this.screenDimension,
     this.textScaleFactor = 1,
   });
 
@@ -66,7 +62,7 @@ final class LargeDeviceType extends DeviceType {
   const LargeDeviceType()
       : super(
           representation: "Large",
-          size: ScreenDimension.large,
+          screenDimension: ScreenDimension.large,
           textScaleFactor: DeviceTextScaleFactor.large,
         );
 }
@@ -76,7 +72,7 @@ final class MediumDeviceType extends DeviceType {
   const MediumDeviceType()
       : super(
           representation: "Medium",
-          size: ScreenDimension.medium,
+          screenDimension: ScreenDimension.medium,
           textScaleFactor: DeviceTextScaleFactor.medium,
         );
 }
@@ -86,44 +82,47 @@ final class SmallDeviceType extends DeviceType {
   const SmallDeviceType()
       : super(
           representation: "Small",
-          size: ScreenDimension.small,
+          screenDimension: ScreenDimension.small,
           textScaleFactor: DeviceTextScaleFactor.small,
         );
 }
 
-/// Extension allows you to work with a class using BuildContext
-extension ScreenUtilExtension on BuildContext {
+/// A widget that helps to achive responsiveness
+class Responsive extends StatelessWidget {
+  const Responsive({
+    super.key,
+    this.small,
+    this.medium,
+    this.large,
+  }) : assert(
+          small != null && medium != null && large != null,
+          "at least one of the parameters must be passed",
+        );
 
-  DeviceType get deviceType =>
-      ScreenUtil.deviceTypeOf(MediaQuery.of(this).size);
+  final WidgetBuilder? small;
+  final WidgetBuilder? medium;
+  final WidgetBuilder? large;
 
-  /// Adapt widget by DeviceType
-  Widget adaptByDeviceType({
-    WidgetBuilder? large,
-    WidgetBuilder? medium,
-    WidgetBuilder? small,
-  }) {
-    return switch (ScreenUtil.deviceTypeOf(MediaQuery.of(this).size)) {
-      LargeDeviceType _ => _callDeviceBuilderCheckingNull(large, this),
-      MediumDeviceType _ => _callDeviceBuilderCheckingNull(medium, this),
-      SmallDeviceType _ => _callDeviceBuilderCheckingNull(small, this),
-    };
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (_, constraints) =>
+          switch (ScreenUtil.deviceTypeOf(constraints.maxWidth)) {
+        LargeDeviceType _ => _callDeviceBuilderCheckingNull(large, context),
+        MediumDeviceType _ => _callDeviceBuilderCheckingNull(medium, context),
+        SmallDeviceType _ => _callDeviceBuilderCheckingNull(small, context),
+      },
+    );
   }
-
-  /// Perform action by DeviceType
-  void performActionByDeviceType({
-    VoidCallback? large,
-    VoidCallback? medium,
-    VoidCallback? small,
-  }) =>
-      switch (ScreenUtil.deviceTypeOf(MediaQuery.of(this).size)) {
-        LargeDeviceType _ => large == null ? () {} : large(),
-        MediumDeviceType _ => medium == null ? () {} : medium(),
-        SmallDeviceType _ => small == null ? () {} : small(),
-      };
 }
 
-/// [DeviceTypeException] 
+/// Extension allows you to work with a class using BuildContext
+extension ScreenUtilExtension on BuildContext {
+  DeviceType get deviceType =>
+      ScreenUtil.deviceTypeOf(MediaQuery.of(this).size.width);
+}
+
+/// [DeviceTypeException]
 class DeviceTypeException implements Exception {
   final String message;
   const DeviceTypeException(this.message);
