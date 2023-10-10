@@ -6,13 +6,14 @@ void main() => runApp(_ExampleColor());
 class _ExampleColor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const colors = <Color>[
-      NotebookColors.grey,
-      NotebookColors.greyLight,
-      NotebookColors.greyMedium,
-      NotebookColors.greyBlack,
+    final colors = <Color>[
+      NotebookColors.grey.normal,
+      NotebookColors.grey.light,
+      NotebookColors.grey.medium,
+      NotebookColors.grey.black,
       NotebookColors.blue,
       NotebookColors.orange,
+      NotebookColors.red,
     ];
 
     return MaterialApp(
