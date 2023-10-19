@@ -1,0 +1,15 @@
+{
+    "helloWorld": "Hello world",
+    "@helloWorld": {
+        "desciption": "The conventional newborn progammer greeting"
+    },
+    "gettingStarted": "Getting Started",
+    "greeting": "Hi, {user}!",
+    "@greeting": {
+        "placeholders": {
+            "user": {
+                "type": "String"
+            }
+        }
+    }
+}

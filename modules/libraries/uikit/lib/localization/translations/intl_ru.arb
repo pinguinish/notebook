@@ -1,0 +1,12 @@
+{
+    "helloWorld": "Привет Мир!",
+    "gettingStarted": "Начало работы",
+    "greeting": "Привет, {user}!",
+    "@greeting": {
+        "placeholders": {
+            "user": {
+                "type": "String"
+            }
+        }
+    }
+}

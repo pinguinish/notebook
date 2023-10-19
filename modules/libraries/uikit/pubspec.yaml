@@ -8,16 +8,40 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
+
   flutter:
     sdk: flutter
+
+  # Localization
+  flutter_localizations: 
+    sdk: flutter
+  intl: ^0.18.1
+
   cupertino_icons: ^1.0.2
+
+flutter_gen:
+  output: lib/assets/generated
+  line_length: 80
+
+flutter_intl:
+  enabled: true
+  class_name: GeneratedLocalization
+  main_locale: en
+  arb_dir: lib/localization/translations
+  output_dir: lib/localization/generated
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
 
+  intl_utils: ^2.8.4
+  flutter_gen_runner: ^5.3.2
+
+
 flutter:
+  generate: false
   uses-material-design: true
   fonts:
     - family: Notebook Icons
